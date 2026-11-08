@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*.log
+*.tmp
+*.bak*
+*.egg-info/
+.venv/
+venv/
+results/
+checkpoints/
+outputs/
+.cache/
+.DS_Store

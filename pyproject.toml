@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "herm-vla"
+version = "0.1.0"
+description = "64-query gated memory and image-level Top-4 historical KV for RMBench"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["qwen_35_version*", "eventvla*", "deployment*", "examples*"]
+namespaces = true
+
+[tool.setuptools.package-data]
+"*" = ["*.yaml", "*.yml", "*.json", "*.sh", "*.md"]

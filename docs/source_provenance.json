@@ -1,0 +1,19 @@
+{
+  "final_model": "64Q zero-state slot gate + individual-image Top-4 historical KV",
+  "run_id": "rmbench9_qwen35_memory64_zero_state_gate_image_top4_abs0_rel2_tbptt2_zero1_b2_8gpu_hope8_20261020_120324_EDT_retry1",
+  "checkpoint": "checkpoints/steps_80000_pytorch_model.pt",
+  "source": "frozen training input_source",
+  "source_manifest_matches_before_packaging": true,
+  "frozen_package_files": 53,
+  "core_model_and_data_python_unchanged": true,
+  "shared_framework_source": "EventVLA checkout on zjc-hope-8, collected 2026-11-08",
+  "packaging_changes": [
+    "repository-relative launcher and environment-configurable asset/output paths",
+    "QWEN35_BASE_MODEL override for relocated inference checkpoints",
+    "local regression fixture for the prior frame-level gate reference",
+    "formal evaluation scheduler and cover_blocks-only RGB correction",
+    "requirements updated from observed starvla environment",
+    "unused inherited application entry points omitted"
+  ],
+  "result": "188/225 (83.56%)"
+}

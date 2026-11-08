@@ -1,0 +1,63 @@
+{
+  "run_id": "rmbench9_qwen35_memory64_zero_state_gate_image_top4_abs0_rel2_tbptt2_zero1_b2_8gpu_hope8_20261020_120324_EDT_retry1",
+  "checkpoint_step": 80000,
+  "seed": 0,
+  "tasks": [
+    {
+      "task": "battery_try",
+      "success": 19,
+      "episodes": 25,
+      "swap_rb": false
+    },
+    {
+      "task": "blocks_ranking_try",
+      "success": 25,
+      "episodes": 25,
+      "swap_rb": false
+    },
+    {
+      "task": "cover_blocks",
+      "success": 25,
+      "episodes": 25,
+      "swap_rb": true
+    },
+    {
+      "task": "observe_and_pickup",
+      "success": 4,
+      "episodes": 25,
+      "swap_rb": false
+    },
+    {
+      "task": "press_button",
+      "success": 20,
+      "episodes": 25,
+      "swap_rb": false
+    },
+    {
+      "task": "put_back_block",
+      "success": 25,
+      "episodes": 25,
+      "swap_rb": false
+    },
+    {
+      "task": "rearrange_blocks",
+      "success": 25,
+      "episodes": 25,
+      "swap_rb": false
+    },
+    {
+      "task": "swap_T",
+      "success": 20,
+      "episodes": 25,
+      "swap_rb": false
+    },
+    {
+      "task": "swap_blocks",
+      "success": 25,
+      "episodes": 25,
+      "swap_rb": false
+    }
+  ],
+  "success": 188,
+  "episodes": 225
+}

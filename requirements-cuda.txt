@@ -1,0 +1,7 @@
+# Install after the CUDA-compatible torch build; requires compiler/toolkit.
+flash-attn==2.7.3
+flash-linear-attention==0.5.2
+fla-core==0.5.2
+causal-conv1d==1.5.3.post1
+# The working environment additionally provides pytorch3d==0.7.9.
+# Build/install that version against the selected torch and CUDA toolchain.

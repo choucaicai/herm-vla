@@ -1,0 +1,9 @@
+compute_environment: LOCAL_MACHINE
+debug: false
+deepspeed_config:
+  deepspeed_config_file: "./qwen_35_version/raw_qwen35_mix_current_kv_action_memory64_all_tokens_zero_state_gate_image_topk/config/ds_zero1.json"
+  deepspeed_multinode_launcher: standard
+  zero3_init_flag: false
+distributed_type: DEEPSPEED
+num_machines: 1
+num_processes: 8
