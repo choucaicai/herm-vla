@@ -128,3 +128,7 @@ PYTHONPATH="$PWD" python -m unittest discover \
 ```
 
 后者需要模型运行环境，使用小型随机模型测试 memory、图像路由、padding、KV缓存和TBPTT，不加载4B权重。完整真实模型验证入口为模型包内 `tests/validate_real_memory64.py`。
+
+## 8. 终版 M-only 消融
+
+`./scripts/train_m_only.sh` 保留终版64Q零初态Gate query memory，原生DeltaNet S/conv每次重置；唯一通路开关是 `cache_delta_indices: []`，使跨决策历史KV始终为空。输入、80k预算、8GPU×B2及TBPTT2不变。详见 `docs/M_ONLY_ABLATION.md`。旧原生S-only不作为这组的替代结果。
