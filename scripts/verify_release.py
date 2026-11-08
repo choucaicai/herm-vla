@@ -25,13 +25,16 @@ def main():
     ast.parse(body, filename="eval_rmbench_v2 embedded Python")
 
     frozen = json.loads((ROOT / "docs/frozen_source_sha256.json").read_text())
+    extension = json.loads((ROOT / "docs/topk_extension_sha256.json").read_text())["core_changes"]
     checked = []
     for relative, expected in frozen.items():
         if relative.startswith(("model/", "data/", "training/")) and relative.endswith(".py"):
             path = PACKAGE / relative
             actual = hashlib.sha256(path.read_bytes()).hexdigest()
             if actual != expected:
-                raise AssertionError(f"Frozen model/data/trainer hash mismatch: {relative}")
+                change = extension.get(relative, {})
+                if change.get("frozen_sha256") != expected or change.get("extended_sha256") != actual:
+                    raise AssertionError(f"Frozen model/data/trainer hash mismatch: {relative}")
             checked.append(relative)
 
     results = json.loads((ROOT / "docs/results.json").read_text())

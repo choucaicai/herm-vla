@@ -25,7 +25,7 @@ class ImageRoutingTests(unittest.TestCase):
         self.assertNotIn('topk_history_frames',cfg.framework.moba_memory)
         for bad in [dict(block_unit='image',topk_history_frames=4),
                     dict(block_unit='frame_time',topk_history_images=4),
-                    dict(block_unit='image',topk_history_images=5),dict(block_unit='camera')]:
+                    dict(block_unit='image',topk_history_images=9),dict(block_unit='camera')]:
             with self.subTest(settings=bad),self.assertRaises(ValueError):retrieval_settings(bad)
 
     def _capture(self,memory,timestep):

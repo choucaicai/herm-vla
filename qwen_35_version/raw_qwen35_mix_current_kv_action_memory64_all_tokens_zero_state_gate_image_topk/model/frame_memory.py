@@ -20,8 +20,8 @@ def retrieval_settings(settings):
     if other in settings:
         raise ValueError(f"block_unit={unit} requires {selected}, not {other}")
     topk = int(settings.get(selected, 4))
-    if not 1 <= topk <= 4:
-        raise ValueError(f"{selected} must be between one and four")
+    if not 1 <= topk <= 8:
+        raise ValueError(f"{selected} must be between one and eight")
     return unit, topk
 
 
@@ -192,8 +192,8 @@ class MemoryContext:
 
 class FrameKVMemory:
     def __init__(self, layer_indices, topk=4, max_history_frames=None, *, block_unit="frame_time"):
-        if not 1 <= topk <= 4:
-            raise ValueError("Top-k must be between one and four")
+        if not 1 <= topk <= 8:
+            raise ValueError("Top-k must be between one and eight")
         if block_unit not in {"frame_time", "image"}:
             raise ValueError("block_unit must be frame_time or image")
         self.block_unit = block_unit

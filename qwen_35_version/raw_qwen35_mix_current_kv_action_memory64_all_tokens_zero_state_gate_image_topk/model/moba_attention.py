@@ -74,8 +74,11 @@ def make_sparse_mask(route, lengths, valid_tokens, width):
         [sequence, history_tokens, width, frame_count],
         device=route.device, dtype=torch.long,
     )
-    padded_choices = F.pad(route, (0, max(0, 4 - topk)), value=-1)
-    choices = tuple(padded_choices[..., rank].contiguous() for rank in range(4))
+    # Keep the original four-choice path for Top-k <= 4; include every
+    # selected image for larger retrieval budgets instead of truncating at four.
+    choice_count = max(4, topk)
+    padded_choices = F.pad(route, (0, choice_count - topk), value=-1)
+    choices = tuple(padded_choices[..., rank].contiguous() for rank in range(choice_count))
 
     def mask_mod(b, h, q, k):
         query_index = torch.minimum(q, meta[0] - 1)
@@ -84,12 +87,9 @@ def make_sparse_mask(route, lengths, valid_tokens, width):
         current_index = torch.minimum(
             torch.maximum(k - meta[1], torch.zeros_like(k)), meta[0] - 1,
         )
-        chosen = (
-            (choices[0][b, h, query_index] == frame)
-            | (choices[1][b, h, query_index] == frame)
-            | (choices[2][b, h, query_index] == frame)
-            | (choices[3][b, h, query_index] == frame)
-        )
+        chosen = choices[0][b, h, query_index] == frame
+        for rank in range(1, choice_count):
+            chosen = chosen | (choices[rank][b, h, query_index] == frame)
         historical = (k < meta[1]) & chosen & (offset < lengths[b, frame])
         current = (
             (k >= meta[1]) & (k < meta[1] + meta[0])

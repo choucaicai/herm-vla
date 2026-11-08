@@ -1,0 +1,14 @@
+{
+  "description": "Audited Top-k budget extension; original Top-4 release hashes remain preserved. Only these two core files differ from frozen release.",
+  "base_commit": "22f39902200949f57d57f2afe66ff5e54cdb8269",
+  "core_changes": {
+    "model/frame_memory.py": {
+      "frozen_sha256": "9581d311c39e0901331d3b9f8de55ece66ab6a1e23220455a259cdb25df916ae",
+      "extended_sha256": "d942137078f50f51c4447debfa6509860c4192fad64d6766ae61f172bc3b86b6"
+    },
+    "model/moba_attention.py": {
+      "frozen_sha256": "b483194f5725abe0b2cc81a7671dce90cb1ae7f09747be1043447d97a998610d",
+      "extended_sha256": "1a5459d7b6c5604d6a24f9828ec617a79f71cd3a83f3a63160bf6738a92afd02"
+    }
+  }
+}

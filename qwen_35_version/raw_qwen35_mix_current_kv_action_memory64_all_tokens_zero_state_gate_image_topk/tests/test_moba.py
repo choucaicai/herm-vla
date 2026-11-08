@@ -171,7 +171,7 @@ class FrameTests(unittest.TestCase):
         self.assertEqual(str(caught[0].message), "An unrelated compiler warning")
 
 
-def attention_check(device="cpu", frame_count=6, dtype=torch.float32, width=192):
+def attention_check(device="cpu", frame_count=6, dtype=torch.float32, width=192, topk=4):
     torch.manual_seed(71 + frame_count)
     batch, heads, kv_heads, sequence, dim = 2, 16, 4, 97, 256
     query = torch.randn(batch, heads, sequence, dim, device=device, dtype=dtype, requires_grad=True)
@@ -189,7 +189,7 @@ def attention_check(device="cpu", frame_count=6, dtype=torch.float32, width=192)
     backend = "flex" if device == "cuda" else "dense_reference"
     started = time.monotonic()
     output, route = sparse_frame_attention(
-        query, key, value, packed, valid, topk=4, backend=backend,
+        query, key, value, packed, valid, topk=topk, backend=backend,
         history_query_mask=enabled_queries,
     )
     # Independently enumerate each selected time and the causal current keys.
