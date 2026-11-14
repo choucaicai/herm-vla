@@ -11,3 +11,5 @@ checkpoints/
 outputs/
 .cache/
 .DS_Store
+/data/
+/qwen_35_version/real_qwen35_final/validation/

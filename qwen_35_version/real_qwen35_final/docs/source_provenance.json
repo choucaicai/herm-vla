@@ -1,0 +1,32 @@
+{
+  "base_release": "/mnt/dolphinfs/ssd_pool/docker/user/hadoop-mlm-hlsc/hadoop-mlm/zhoujiacong/code/RMBench/repo-version",
+  "base_package": "qwen_35_version/raw_qwen35_mix_current_kv_action_memory64_all_tokens_zero_state_gate_image_topk",
+  "base_model": "64Q zero-state slot Gate + individual-image Top-4 historical KV",
+  "base_run_id": "rmbench9_qwen35_memory64_zero_state_gate_image_top4_abs0_rel2_tbptt2_zero1_b2_8gpu_hope8_20261020_120324_EDT_retry1",
+  "target_package": "qwen_35_version/real_qwen35_final",
+  "framework": "RealQwen35Final",
+  "cameras": [
+    "cam_high",
+    "cam_follower_wrist"
+  ],
+  "action_dim": 7,
+  "action_horizon": 50,
+  "absolute_indices": [
+    0
+  ],
+  "delta_indices": [
+    -15,
+    0
+  ],
+  "normalization": "q01/q99 over recorded 7-D positions, continuous gripper, no unit conversion",
+  "unchanged_core_files": [
+    "model/query_memory.py",
+    "model/moba_attention.py",
+    "model/slot_memory.py",
+    "model/padding_safe_delta.py",
+    "training/state.py",
+    "model/window_vision.py"
+  ],
+  "shared_framework_modified": false,
+  "initialization": "base Qwen3.5 by default; optional original final checkpoint transfer excluding final 14-D projection"
+}

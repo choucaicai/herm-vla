@@ -134,3 +134,9 @@ PYTHONPATH="$PWD" python -m unittest discover \
 `./scripts/train_m_only.sh` 保留终版64Q零初态Gate query memory，原生DeltaNet S/conv每次重置；唯一通路开关是 `cache_delta_indices: []`，使跨决策历史KV始终为空。输入、80k预算、8GPU×B2及TBPTT2不变。详见 `docs/M_ONLY_ABLATION.md`。旧原生S-only不作为这组的替代结果。
 
 Historical KV budget ablations: [Top-6 / Top-8](docs/TOPK_ABLATIONS.md), launched with `bash scripts/train_topk.sh 6` or `8`.
+
+## 9. Piper 真机数据适配
+
+[`qwen_35_version/real_qwen35_final`](qwen_35_version/real_qwen35_final/README.md) 基于单组 64Q Gate＋单图 Top-4 终版，直接读取 `data/Pick_block_easy` 的 LeRobot v3 数据：两路相机、7 维绝对关节／夹爪位置、连续夹爪归一化，输出动作块为 `50×7`。模型保持 `include_state: false`。
+
+已在 `zjc-hope-8-3` 用 8×H100 完成 20,000 steps，退出码 0，最终 action L1 loss 为 `0.005026`。训练入口为 `bash qwen_35_version/real_qwen35_final/scripts/train_real.sh`；20k 参数、数据约定、推理接口及验证记录见包内说明。原始数据和训练权重保存在运行环境中。
