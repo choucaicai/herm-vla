@@ -1,0 +1,106 @@
+{
+  "stateless_reference": "RMBench raw_qwen35_current_only validated training snapshot 20261112",
+  "real_robot_reference_commit": "2a29e3589c77b3fc593cd19420d5c897bc7c1367",
+  "source_files": {
+    "__init__.py": {
+      "source": "artifacts/rmbench_qwen35_current_only_20261112/source/qwen_35_version/raw_qwen35_current_only/__init__.py",
+      "sha256": "766aeed6a5e502f0742664a20ab060a3940f36eb2c25142c0e0d1bee3dd1fe07"
+    },
+    "model/__init__.py": {
+      "source": "artifacts/rmbench_qwen35_current_only_20261112/source/qwen_35_version/raw_qwen35_current_only/model/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "model/eventvla_qwen35_mix.py": {
+      "source": "artifacts/rmbench_qwen35_current_only_20261112/source/qwen_35_version/raw_qwen35_current_only/model/eventvla_qwen35_mix.py",
+      "sha256": "83f3aad806918eeef00a77f61c36d14fa8e5d69ecb876b5a9902e8359e5e9103"
+    },
+    "training/__init__.py": {
+      "source": "artifacts/rmbench_qwen35_current_only_20261112/source/qwen_35_version/raw_qwen35_current_only/training/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "training/train.py": {
+      "source": "artifacts/rmbench_qwen35_current_only_20261112/source/qwen_35_version/raw_qwen35_current_only/training/train.py",
+      "sha256": "05fa8aa0ef8e99d68b24558af0ed256662af1b5f87d83db5f2a0b5dc81f7a864"
+    },
+    "validate_real.py": {
+      "source": "artifacts/rmbench_qwen35_current_only_20261112/source/qwen_35_version/raw_qwen35_current_only/validate_real.py",
+      "sha256": "bb35fdf680478114c43d080ffac9c522433d74481953ab882c9a1c3d923e82d4"
+    },
+    "data/__init__.py": {
+      "source": "repo-version/qwen_35_version/real_qwen35_final/data/__init__.py",
+      "sha256": "19aa3d9ae0f7e091cd3d55f4058868511fbbac77074afc22c9d78b0f8162fe56"
+    },
+    "data/episode_windows.py": {
+      "source": "repo-version/qwen_35_version/real_qwen35_final/data/episode_windows.py",
+      "sha256": "eecb918588a5ffb9cd7d060aaf4b841b731186dd4af10929bb66a35ca7250cd4"
+    },
+    "data/frame_tokens.py": {
+      "source": "repo-version/qwen_35_version/real_qwen35_final/data/frame_tokens.py",
+      "sha256": "b7ff74340b2d2ece3ff97fa37f14ccdcbc4a0a8f15056e40135246ae910e08b8"
+    },
+    "data/worker_preprocess.py": {
+      "source": "repo-version/qwen_35_version/real_qwen35_final/data/worker_preprocess.py",
+      "sha256": "63a5e17d6411c6b3a1523c0e15a1b18bb24dd9eff1cfe85181549fb077dac57e"
+    },
+    "data/piper_dataset.py": {
+      "source": "repo-version/qwen_35_version/real_qwen35_final/data/piper_dataset.py",
+      "sha256": "1b1a8b7f249fd13e4ded4f9999672237cd841c6b69a30ca3964f6508e32b15a7"
+    },
+    "data/temporal_profile.py": {
+      "source": "repo-version/qwen_35_version/real_qwen35_final/data/temporal_profile.py",
+      "sha256": "3ae0b876a8e85444c35108b30f953af03374b55605264d456f106f6c150eb4ae"
+    },
+    "model/action_loss.py": {
+      "source": "repo-version/qwen_35_version/real_qwen35_final/model/action_loss.py",
+      "sha256": "68826f1f865de0b00fea28559ec5593e706396dd67a9b14f811e1a855d66aae7"
+    },
+    "model/padding_safe_delta.py": {
+      "source": "repo-version/qwen_35_version/real_qwen35_final/model/padding_safe_delta.py",
+      "sha256": "1c4a6c26358104d6370445f3d66757ca88392331a84f146bde8c8d40562a9748"
+    },
+    "model/recurrent_cache.py": {
+      "source": "repo-version/qwen_35_version/real_qwen35_final/model/recurrent_cache.py",
+      "sha256": "f4a31f11d203534e48a9407356799c17a6d558ab31f7571076b46db198f42e2a"
+    },
+    "model/window_vision.py": {
+      "source": "repo-version/qwen_35_version/real_qwen35_final/model/window_vision.py",
+      "sha256": "8b56ebc20d69147c435f9d564b1047e088381e275a25cb2537d5bfc3af5fe363"
+    },
+    "model/normalization.py": {
+      "source": "repo-version/qwen_35_version/real_qwen35_final/model/normalization.py",
+      "sha256": "d87b762e31826d5933486c87fc167142f5474b2610e84150ed32fcc3e66c3e57"
+    },
+    "training/kernel_warmup.py": {
+      "source": "repo-version/qwen_35_version/real_qwen35_final/training/kernel_warmup.py",
+      "sha256": "ebab517902195ef84f44d42675b4bdac5fe4026cb52f8710cdad0431a46119e1"
+    },
+    "config/deepspeed_zero1.yaml": {
+      "source": "repo-version/qwen_35_version/real_qwen35_final/config/deepspeed_zero1.yaml",
+      "sha256": "3071cf154a906e2e7f4accaae16666975fa650f4902f35490f2f015504187ab1"
+    },
+    "config/deepspeed_zero2.yaml": {
+      "source": "repo-version/qwen_35_version/real_qwen35_final/config/deepspeed_zero2.yaml",
+      "sha256": "3e57e6cb3558ec7e4695206405d48e5cdb7632e9b4b2f589d19f504a0f7acb61"
+    },
+    "config/ds_zero1.json": {
+      "source": "repo-version/qwen_35_version/real_qwen35_final/config/ds_zero1.json",
+      "sha256": "c3b350fcdc8bf299107dee5a4e540b50e1fdbc1a4a4ddea6d9bd74980e46fee0"
+    },
+    "config/ds_zero2.json": {
+      "source": "repo-version/qwen_35_version/real_qwen35_final/config/ds_zero2.json",
+      "sha256": "6b67f59dcc73ed96570b910590ce8448dad5d3c659d8111cf20834f8c13ee0ac"
+    },
+    "tests/__init__.py": {
+      "source": "repo-version/qwen_35_version/real_qwen35_final/tests/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tests/validate_dataset.py": {
+      "source": "repo-version/qwen_35_version/real_qwen35_final/tests/validate_dataset.py",
+      "sha256": "f1f7a97074717d0d5f82fc50e49f8bc415fb091301c5c82d23503b884e5d17e3"
+    },
+    "scripts/train_real.sh": {
+      "source": "repo-version/qwen_35_version/real_qwen35_final/scripts/train_real.sh",
+      "sha256": "7911bccfc578f9a04b88c07dfa28a8810fb232f7ae139a0481efaccbeb592f7b"
+    }
+  }
+}

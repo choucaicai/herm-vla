@@ -142,3 +142,5 @@ Historical KV budget ablations: [Top-6 / Top-8](docs/TOPK_ABLATIONS.md), launche
 已在 `zjc-hope-8-3` 用 8×H100 完成 20,000 steps，退出码 0，最终 action L1 loss 为 `0.005026`。训练入口为 `bash qwen_35_version/real_qwen35_final/scripts/train_real.sh`；20k 参数、数据约定、推理接口及验证记录见包内说明。原始数据和训练权重保存在运行环境中。
 
 双数据集版本使用 `bash qwen_35_version/real_qwen35_final/scripts/train_two_tasks.sh`，联合训练 `Pick_block_easy` 和 `Pick_block_hard`（180 条轨迹、165,118 帧），均衡两个数据集的决策步数，共用连续动作归一化；默认从基座重新训练 40k steps。
+
+无记忆对照版本 [`real_qwen35_current_only`](qwen_35_version/real_qwen35_current_only/README.md) 只输入当前帧的两路相机图像，移除 memory query 和历史 KV，每次决策重置原生 S/卷积状态；使用相同 Easy + Hard 数据、归一化、40k 预算和每次更新的决策数量。入口为 `bash qwen_35_version/real_qwen35_current_only/scripts/train_real.sh`。

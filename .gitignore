@@ -13,3 +13,4 @@ outputs/
 .DS_Store
 /data/
 /qwen_35_version/real_qwen35_final/validation/
+/qwen_35_version/real_qwen35_current_only/validation/
