@@ -1,0 +1,20 @@
+{
+  "upstream": "https://github.com/starVLA/starVLA",
+  "commit": "13d8ad43eb4128554c57227507055ecf9c3a62a2",
+  "source_sha256": {
+    "starVLA/model/modules/action_model/GR00T_ActionHeader.py": "a01c7ca048589835a23bf46cf670275dfa643a1fb2da0bafd14654e1a57236e5",
+    "starVLA/model/modules/action_model/flow_matching_head/action_encoder.py": "c88c409e5db16eab2f64d50efb159fb8a943527a4673461106035dc55e8708bf",
+    "starVLA/model/modules/action_model/flow_matching_head/cross_attention_dit.py": "36cbf839faaaeb00d8c9cc44fbd6ce73c487949d7f7f09728f29cc6ace08c6db"
+  },
+  "baseline_commit": "04c14cb9adf960aafe97315355a053c5294a9510",
+  "baseline_package": "raw_qwen35_mix_current_kv_action_memory64_all_tokens_zero_state_gate_image_topk",
+  "integration_template": "qwen35_memory64_gate_top4_pi_v3",
+  "adaptations": [
+    "package-local imports",
+    "stateless expert block activation checkpointing",
+    "masked loss and Qwen condition padding",
+    "eight diffusion samples per observation",
+    "last Qwen hidden state only"
+  ],
+  "original_final_release_commit": "03f79162379ee799d910d4879ea2b1e507dfdb74"
+}

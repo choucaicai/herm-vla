@@ -1,0 +1,37 @@
+{
+  "identical_to_committed_final": [
+    "config/ds_zero1.json",
+    "config/ds_zero2.json",
+    "data/__init__.py",
+    "data/episode_windows.py",
+    "data/frame_tokens.py",
+    "data/temporal_profile.py",
+    "data/worker_preprocess.py",
+    "eval/__init__.py",
+    "model/__init__.py",
+    "model/action_loss.py",
+    "model/eventvla_qwen35_recurrent.py",
+    "model/frame_memory.py",
+    "model/input_groups.py",
+    "model/moba_attention.py",
+    "model/padding_safe_delta.py",
+    "model/query_memory.py",
+    "model/recurrent_cache.py",
+    "model/slot_memory.py",
+    "model/window_vision.py",
+    "tests/__init__.py",
+    "training/__init__.py",
+    "training/kernel_warmup.py",
+    "training/state.py"
+  ],
+  "baseline_commit": "04c14cb9adf960aafe97315355a053c5294a9510",
+  "unchanged_modules": [
+    "64Q gated memory",
+    "MoBA image Top-4",
+    "padding-safe DeltaNet",
+    "window vision batching",
+    "RMBench dataset and temporal sampling",
+    "TBPTT slot state"
+  ],
+  "original_final_release_commit": "03f79162379ee799d910d4879ea2b1e507dfdb74"
+}

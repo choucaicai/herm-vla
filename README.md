@@ -144,3 +144,7 @@ Historical KV budget ablations: [Top-6 / Top-8](docs/TOPK_ABLATIONS.md), launche
 双数据集版本使用 `bash qwen_35_version/real_qwen35_final/scripts/train_two_tasks.sh`，联合训练 `Pick_block_easy` 和 `Pick_block_hard`（180 条轨迹、165,118 帧），均衡两个数据集的决策步数，共用连续动作归一化；默认从基座重新训练 40k steps。
 
 无记忆对照版本 [`real_qwen35_current_only`](qwen_35_version/real_qwen35_current_only/README.md) 只输入当前帧的两路相机图像，移除 memory query 和历史 KV，每次决策重置原生 S/卷积状态；使用相同 Easy + Hard 数据、归一化、40k 预算和每次更新的决策数量。入口为 `bash qwen_35_version/real_qwen35_current_only/scripts/train_real.sh`。
+
+## 10. Qwen3.5 + GR00T 动作头
+
+[`qwen35_memory64_gate_top4_groot`](qwen_35_version/qwen35_memory64_gate_top4_groot/README.md) 保留终版 64Q Gate 与单图 Top-4 历史 KV，接入固定版本 starVLA 的 GR00T Flow-Matching / DiT-B 动作头：16 层、宽度 768，交替 cross/self attention，仅以 Qwen 最后一层为条件；训练每个观测采样 8 次噪声，推理 4 步 Euler，输出 `50×14`。使用 `rmbench9`、9 张时序图像、8 GPU×B2、TBPTT=2 和 80k 预算，从 Qwen3.5-4B 基座重新训练。入口为 `bash qwen_35_version/qwen35_memory64_gate_top4_groot/scripts/train_groot.sh`；上游来源、掩码处理和验证记录见包内文档。
