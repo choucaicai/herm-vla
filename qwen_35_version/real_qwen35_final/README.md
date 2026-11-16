@@ -59,6 +59,29 @@ MAX_TRAIN_STEPS=20000 bash qwen_35_version/real_qwen35_final/scripts/train_real.
 
 `trainer.resume_checkpoint` 用于本包 7 维模型的严格权重恢复，不能与 `INIT_CHECKPOINT` 同时设置。继承的恢复入口不恢复 optimizer 状态。
 
+## Easy + Hard 两数据集训练
+
+将 `Pick_block_easy` 和 `Pick_block_hard` 放在仓库的 `data/` 下，运行：
+
+```bash
+export PIPER_DATA_ROOT="$PWD/data"
+bash qwen_35_version/real_qwen35_final/scripts/train_two_tasks.sh
+```
+
+该入口使用 `config/train_two_tasks.yaml`，从 Qwen3.5-4B 基座重新初始化，训练 40,000 steps，warmup 2,500 steps，每 5,000 steps 保存，保留最近 4 个 checkpoint。8 卡、B2/GPU、TBPTT2、64Q Gate 和单图 Top-4 设置与原真机版本一致。
+
+`datasets.vla_data.dataset_paths` 显式列出两份数据；旧的单数据集 `dataset_path` 配置仍可使用。当前两份数据各有 90 条轨迹，合计 165,118 帧；两份数据都包含蓝／红／黄方块的 3 条相同语言指令。轨迹 ID 加入数据集索引，避免两份数据中的同号轨迹混淆。采样器按数据集均衡决策步数，两者占比约 1:1。
+
+两份数据各自计算统计后，共用一套归一化：逐维取两者 q01 的最小值和 q99 的最大值作为连续位置区间，并将这套统计保存到 run 的 `dataset_statistics.json`，推理使用同一文件。
+
+启动前可验证两个数据集的全部轨迹元数据、视频分片边界、动作反归一化和 worker 实际采样：
+
+```bash
+python -m qwen_35_version.real_qwen35_final.tests.validate_dataset \
+  --config qwen_35_version/real_qwen35_final/config/train_two_tasks.yaml \
+  --output qwen_35_version/real_qwen35_final/validation/two_tasks --workers
+```
+
 ## 验证
 
 ```bash

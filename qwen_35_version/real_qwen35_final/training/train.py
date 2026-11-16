@@ -92,6 +92,7 @@ from qwen_35_version.real_qwen35_final.data import (
 )
 from qwen_35_version.real_qwen35_final.data.frame_tokens import temporal_image_count
 from qwen_35_version.real_qwen35_final.data.temporal_profile import temporal_indices
+from qwen_35_version.real_qwen35_final.data.piper_dataset import resolve_piper_paths
 from eventvla.training.trainer_utils.trainer_tools import (
     build_param_lr_groups,
     normalize_dotlist_args,
@@ -307,6 +308,9 @@ def main(cfg):
             "package": "qwen_35_version.real_qwen35_final",
             "base_release_package": "raw_qwen35_mix_current_kv_action_memory64_all_tokens_zero_state_gate_image_topk",
             "dataset_path": str(cfg.datasets.vla_data.dataset_path),
+            "dataset_paths": [str(path) for path in resolve_piper_paths(cfg.datasets.vla_data)],
+            "dataset_sampling": "balanced_decision_counts" if cfg.datasets.vla_data.get("balance_task_step_counts", True) else "all_episodes",
+            "normalization_merge": "min of source q01; max of source q99; shared across sources",
             "dataset_format": "LeRobot v3.0",
             "camera_order": ["cam_high", "cam_follower_wrist"],
             "action_dim": 7,

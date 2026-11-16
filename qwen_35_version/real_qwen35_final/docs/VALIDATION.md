@@ -27,3 +27,15 @@
 - `checkpoints/steps_{5000,10000,15000,20000}_pytorch_model.pt` 均存在。
 - `final_model/pytorch_model.pt` 已保存，大小为 `10,508,026,262` 字节。
 - 成功 run 使用本包的提前初始化进程组和独立 classic TCPStore 启动修复；训练源码快照保存在 run 的 `source/` 中。
+
+## Easy + Hard 双数据集验证
+
+在 `zjc-hope-8-2`（`psxl1wbxru396rfe-worker-0`）完成：
+
+- 6 项回归测试通过，新增多数据集路径、重复别名和缺失数据集检查。
+- 两份数据各 90 条轨迹，共 180 条、165,118 帧；相机、25 Hz 采样率、7 维位置字段一致。
+- 两份数据各两个视频分片的边界解码、任务语言、50×7 动作和尾部 mask 检查通过。
+- 使用共享 q01/q99 区间，两份数据的连续动作归一化往返均通过；7 个 action mask 均为 true。
+- 合并后 180 个 episode ID 无碰撞；第一个采样 epoch 的 easy/hard 决策数为 1671/1653。
+- Qwen processor + DataLoader worker 连续 8 个 B1/TBPTT2 批次覆盖两个数据集，每个样本 6 张图。
+- 正式训练配置为 `config/train_two_tasks.yaml`：从基座初始化，40k steps，warmup 2,500，每 5k 保存。

@@ -171,13 +171,32 @@ class PiperLeRobotDataset(LeRobotSingleDataset):
         return episode
 
 
+def resolve_piper_paths(data):
+    """Keep the original single source config and accept an explicit source list."""
+    configured = data.get("dataset_paths")
+    if configured is None:
+        configured = [data.dataset_path]
+    if isinstance(configured, (str, bytes)) or not configured:
+        raise ValueError("dataset_paths must be a nonempty list of Piper dataset paths")
+    paths = []
+    for value in configured:
+        path = Path(value).expanduser()
+        if not path.is_absolute():
+            path = Path(__file__).resolve().parents[3] / path
+        path = path.resolve()
+        if path in paths:
+            raise ValueError(f"Duplicate Piper dataset path: {path}")
+        if not (path / "meta/info.json").is_file():
+            raise FileNotFoundError(f"Missing Piper dataset: {path}")
+        paths.append(path)
+    return paths
+
+
 def build_piper_mixture(cfg):
     data = cfg.datasets.vla_data
     if data.get("lerobot_version") != "v3.0" or data.get("action_mode") != "abs":
         raise ValueError("Piper recipe requires lerobot_version=v3.0 and action_mode=abs")
-    path = Path(data.dataset_path).expanduser()
-    if not path.is_absolute():
-        path = Path(__file__).resolve().parents[3] / path
+    paths = resolve_piper_paths(data)
     image = data.temporal.image
     modalities = {
         "video": ModalityConfig(delta_indices=list(image.delta_indices),
@@ -189,16 +208,19 @@ def build_piper_mixture(cfg):
                                    modality_keys=["annotation.human.action.task_description"]),
     }
     keys = ["state.position", "action.position"]
-    transforms = ComposedModalityTransform(transforms=[
-        StateActionToTensor(apply_to=keys),
-        StateActionTransform(apply_to=keys, normalization_modes={key: "q99" for key in keys}),
-    ])
-    source = PiperLeRobotDataset(
-        dataset_path=path, modality_configs=modalities, transforms=transforms,
-        embodiment_tag=EmbodimentTag.NEW_EMBODIMENT,
-        video_backend=data.get("video_backend", "pyav"), data_cfg=data,
-    )
+    sources = []
+    for path in paths:
+        transforms = ComposedModalityTransform(transforms=[
+            StateActionToTensor(apply_to=keys),
+            StateActionTransform(apply_to=keys, normalization_modes={key: "q99" for key in keys}),
+        ])
+        sources.append(PiperLeRobotDataset(
+            dataset_path=path, modality_configs=modalities, transforms=transforms,
+            embodiment_tag=EmbodimentTag.NEW_EMBODIMENT,
+            video_backend=data.get("video_backend", "pyav"), data_cfg=data,
+        ))
     return LeRobotMixtureDataset(
-        [(source, 1.0)], mode="train", balance_dataset_weights=False,
+        [(source, 1.0) for source in sources], mode="train", balance_dataset_weights=False,
         balance_trajectory_weights=False, seed=int(cfg.seed), data_cfg=data,
+        metadata_config={"percentile_mixing_method": "min_max"},
     )

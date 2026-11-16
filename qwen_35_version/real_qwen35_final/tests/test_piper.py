@@ -1,6 +1,7 @@
 import copy
 from pathlib import Path
 import unittest
+import tempfile
 
 import numpy as np
 from omegaconf import OmegaConf
@@ -8,7 +9,7 @@ import torch
 from torch import nn
 
 from ..data.frame_tokens import build_frame_specs, select_cache_frame_specs
-from ..data.piper_dataset import PiperLeRobotDataset, modality_metadata
+from ..data.piper_dataset import PiperLeRobotDataset, modality_metadata, resolve_piper_paths
 from ..eval.observations import PiperObservationBuffer
 from ..model.eventvla_qwen35_mix import RealQwen35Final, validate_config, validate_temporal_batch
 from ..model.normalization import unnormalize_actions
@@ -18,6 +19,28 @@ PACKAGE = Path(__file__).resolve().parents[1]
 
 
 class PiperContractTests(unittest.TestCase):
+    def test_dataset_roots_single_multi_and_duplicate_alias(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            paths = [Path(temporary) / name for name in ("easy", "hard")]
+            for path in paths:
+                (path / "meta").mkdir(parents=True)
+                (path / "meta/info.json").write_text("{}")
+            cfg = OmegaConf.create({"dataset_path": str(paths[0])})
+            self.assertEqual(resolve_piper_paths(cfg), [paths[0].resolve()])
+            cfg.dataset_paths = [str(path) for path in paths]
+            self.assertEqual(resolve_piper_paths(cfg), [path.resolve() for path in paths])
+            alias = Path(temporary) / "alias"
+            alias.symlink_to(paths[0], target_is_directory=True)
+            cfg.dataset_paths = [str(paths[0]), str(alias)]
+            with self.assertRaises(ValueError):
+                resolve_piper_paths(cfg)
+            cfg.dataset_paths = []
+            with self.assertRaises(ValueError):
+                resolve_piper_paths(cfg)
+            cfg.dataset_paths = [str(paths[0]), str(Path(temporary) / "missing")]
+            with self.assertRaises(FileNotFoundError):
+                resolve_piper_paths(cfg)
+
     def test_config_rejects_old_shape_and_camera_count(self):
         cfg = OmegaConf.load(PACKAGE / "config/train.yaml")
         validate_config(cfg)

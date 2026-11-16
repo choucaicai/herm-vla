@@ -140,3 +140,5 @@ Historical KV budget ablations: [Top-6 / Top-8](docs/TOPK_ABLATIONS.md), launche
 [`qwen_35_version/real_qwen35_final`](qwen_35_version/real_qwen35_final/README.md) 基于单组 64Q Gate＋单图 Top-4 终版，直接读取 `data/Pick_block_easy` 的 LeRobot v3 数据：两路相机、7 维绝对关节／夹爪位置、连续夹爪归一化，输出动作块为 `50×7`。模型保持 `include_state: false`。
 
 已在 `zjc-hope-8-3` 用 8×H100 完成 20,000 steps，退出码 0，最终 action L1 loss 为 `0.005026`。训练入口为 `bash qwen_35_version/real_qwen35_final/scripts/train_real.sh`；20k 参数、数据约定、推理接口及验证记录见包内说明。原始数据和训练权重保存在运行环境中。
+
+双数据集版本使用 `bash qwen_35_version/real_qwen35_final/scripts/train_two_tasks.sh`，联合训练 `Pick_block_easy` 和 `Pick_block_hard`（180 条轨迹、165,118 帧），均衡两个数据集的决策步数，共用连续动作归一化；默认从基座重新训练 40k steps。
