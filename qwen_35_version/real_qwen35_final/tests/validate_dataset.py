@@ -8,6 +8,7 @@ import numpy as np
 from omegaconf import OmegaConf
 
 from ..data.temporal_profile import build_recurrent_dataset
+from ..data.frame_tokens import temporal_image_count
 from ..data.episode_windows import RememEpisodeWindowDataset, RememSlotBatchSampler, RememWindow
 from ..model.eventvla_qwen35_mix import validate_config, validate_temporal_batch
 from ..model.normalization import unnormalize_actions
@@ -29,7 +30,11 @@ def validate_source(source, source_index, windows, cfg, stats):
             validate_temporal_batch([sample], data_config=cfg.datasets.vla_data)
             assert sample["action"].shape == (50, 7)
             assert np.isfinite(sample["action"]).all()
-            assert len(sample["image"]) == 6
+            assert len(sample["image"]) == temporal_image_count(cfg.datasets.vla_data)
+            image = cfg.datasets.vla_data.temporal.image
+            expected_frames = list(image.absolute_indices) + [max(0, timestep + delta) for delta in image.delta_indices]
+            assert [meta["frame_timestep"] for meta in sample["image_metas"]] == [
+                frame for frame in expected_frames for _ in range(2)]
             assert int(mask.sum()) == min(50, len(table) - timestep)
             assert sample["lang"] in source.tasks["task"].tolist()
             raw = np.stack(table["action"].to_numpy())[min(timestep, len(table) - 1)]
@@ -77,7 +82,9 @@ def validate(cfg, output, workers=False):
               "frames": sum(item["frames"] for item in sources),
               "sources": sources, "balanced_decisions_epoch0": counts,
               "unique_instructions": sorted({task for item in sources for task in item["tasks"]}),
-              "action_shape": [50, 7], "images_per_sample": 6,
+              "action_shape": [50, 7], "images_per_sample": temporal_image_count(cfg.datasets.vla_data),
+              "absolute_indices": list(cfg.datasets.vla_data.temporal.image.absolute_indices),
+              "delta_indices": list(cfg.datasets.vla_data.temporal.image.delta_indices),
               "normalization_mask": stats["mask"]}
     if workers:
         from ..data import build_dataloader
@@ -97,7 +104,8 @@ def validate(cfg, output, workers=False):
                 batch = next(iterator)
                 assert batch.worker_preprocessed and batch.sequence_shape == (1, 2)
                 assert all(example["action"].shape == (50, 7) for example in batch)
-                assert batch.image_counts == [6, 6]
+                assert batch.image_counts == [temporal_image_count(cfg.datasets.vla_data)] * 2
+                validate_temporal_batch(list(batch), data_config=cfg.datasets.vla_data)
                 seen.update(int(example["episode_id"].split(":")[0]) for example in batch)
                 if len(seen) == len(sources):
                     break

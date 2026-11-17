@@ -85,6 +85,47 @@ class PiperContractTests(unittest.TestCase):
         self.assertTrue(str(dataset.get_video_path(60, "cam_high")).endswith("chunk-001/file-002.mp4"))
         self.assertTrue(str(dataset.get_video_path(60, "cam_follower_wrist")).endswith("chunk-003/file-004.mp4"))
 
+    def test_no_first_training_and_serving_profile(self):
+        cfg = OmegaConf.load(PACKAGE / "config/train_two_tasks_no_first.yaml")
+        validate_config(cfg)
+        buffer = PiperObservationBuffer.from_config(cfg)
+        for frame in range(51):
+            buffer.append(frame, {camera: np.full((4, 4, 3), frame, np.uint8)
+                                  for camera in ("cam_high", "cam_follower_wrist")})
+            if frame in (0, 10, 16, 50):
+                example = buffer.example("Place the yellow block into the white box.")
+                validate_temporal_batch([example], data_config=cfg.datasets.vla_data)
+                self.assertEqual([int(im[0, 0, 0]) for im in example["image"]],
+                                 [max(0, frame - 15)] * 2 + [frame] * 2)
+                self.assertTrue(all(meta["absolute_index"] is None for meta in example["image_metas"]))
+                self.assertEqual([m["time_role"] for m in example["image_metas"]],
+                                 ["history", "history", "current", "current"])
+        self.assertIsNone(buffer._first)
+        self.assertNotIn(0, dict(buffer._recent))
+        ids = torch.tensor([[9, 100, 100, 100, 100, 8] * 4 + [7] * 50])
+        specs = build_frame_specs([example], ids, torch.tensor([[1, 4, 4]] * 4),
+                                  image_token_id=100, deduplicate=False)
+        current = select_cache_frame_specs(specs, [0])
+        self.assertEqual([group["frame_timestep"] for group in specs[0]], [35, 50])
+        self.assertEqual([group["frame_timestep"] for group in current[0]], [50])
+        self.assertEqual(len(current[0][0]["image_spans"]), 2)
+        old = OmegaConf.load(PACKAGE / "config/train_two_tasks.yaml")
+        with self.assertRaises(ValueError):
+            validate_temporal_batch([example], data_config=old.datasets.vla_data)
+        buffer.reset()
+        self.assertEqual(buffer.timestep, -1)
+        self.assertIsNone(buffer._first)
+
+    def test_observation_profile_rejects_future_and_inconsistent_anchors(self):
+        for kwargs in ({"delta_indices": (15, 0)}, {"absolute_indices": (5,)},
+                       {"delta_indices": (-15,)}, {"delta_indices": (-15, 0, 0)}):
+            with self.assertRaises(ValueError):
+                PiperObservationBuffer(**kwargs)
+        cfg = OmegaConf.load(PACKAGE / "config/train_two_tasks_no_first.yaml")
+        cfg.datasets.vla_data.temporal.image.include_initial = True
+        with self.assertRaises(ValueError):
+            PiperObservationBuffer.from_config(cfg)
+
     def test_continuous_gripper_denormalization(self):
         stats = {"q01": [-1] * 6 + [0.0], "q99": [1] * 6 + [0.08], "mask": [True] * 7}
         action = np.zeros((3, 7), np.float32)

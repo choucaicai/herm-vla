@@ -28,5 +28,16 @@
     "model/window_vision.py"
   ],
   "shared_framework_modified": false,
-  "initialization": "base Qwen3.5 by default; optional original final checkpoint transfer excluding final 14-D projection"
+  "initialization": "base Qwen3.5 by default; optional original final checkpoint transfer excluding final 14-D projection",
+  "optional_no_first_profile": {
+    "config": "config/train_two_tasks_no_first.yaml",
+    "absolute_indices": [],
+    "delta_indices": [
+      -15,
+      0
+    ],
+    "images_per_sample": 4,
+    "memory": "same 64Q slot Gate + image Top-4 KV",
+    "training_steps": 40000
+  }
 }

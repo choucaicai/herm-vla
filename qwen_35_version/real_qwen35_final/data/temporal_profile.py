@@ -6,6 +6,7 @@ ABSOLUTE_INDICES = (0,)
 DELTA_INDICES = (-15, 0)
 SUPPORTED_PROFILES = {
     (ABSOLUTE_INDICES, DELTA_INDICES),
+    ((), DELTA_INDICES),
     ((), (-25, 0)),
     ((), (-30, -15, 0)),
     # Retain the old profile when reading existing checkpoint configurations.

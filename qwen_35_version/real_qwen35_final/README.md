@@ -91,6 +91,40 @@ python -m qwen_35_version.real_qwen35_final.tests.validate_dataset --output qwen
 
 数据验证包括两段 MP4 首末轨迹解码、语言对应、连续动作归一化往返、尾部 mask、真实 Qwen processor 的 DataLoader worker 批处理。可选 `tests.validate_model` GPU 验证只执行前后向，不进行 optimizer update，不保存模型权重。
 
+## Easy + Hard 无固定首帧对照
+
+`config/train_two_tasks_no_first.yaml` 将观测改为 `[t-15,t] × 2` 路相机，共 4 张图，
+`absolute_indices: []`、`include_initial: false`。64Q Gate、历史图像 KV Top-4、
+50×7 动作、双数据集归一化、1:1 采样和 40k 训练预算沿用双数据集版本。
+
+```bash
+bash qwen_35_version/real_qwen35_final/scripts/train_two_tasks_no_first.sh
+```
+
+该入口从 Qwen3.5-4B 基座重新训练，输出使用独立的 `real_piper_easy_hard_no_first_...` run 名。
+固定首帧不再作为输入锚点重复出现；早期历史索引小于零时仍按数据规则截断到第 0 帧，
+它也可以作为当时的当前观测进入正常时序记忆。此对照保留跨决策记忆机制。
+
+推理客户端必须使用新 checkpoint 保存的配置创建观测缓存：
+
+```python
+from omegaconf import OmegaConf
+from qwen_35_version.real_qwen35_final.eval.observations import PiperObservationBuffer
+
+config = OmegaConf.load("/path/to/no_first_run/config.yaml")
+buffer = PiperObservationBuffer.from_config(config)
+```
+
+例如 `t=50` 时，4 张图来自 `[35,35,50,50]`；第 0 帧已退出观测缓存。
+服务端按 checkpoint 配置检查图片数量和时序角色，旧 6 图 checkpoint 继续使用旧观测配置。
+无首帧版本需要对应训练，直接向旧 checkpoint 少传两张图会被拒绝。
+
+```bash
+python -m qwen_35_version.real_qwen35_final.tests.validate_dataset \
+  --config qwen_35_version/real_qwen35_final/config/train_two_tasks_no_first.yaml \
+  --output /tmp/piper_no_first_validation --workers
+```
+
 ## 推理
 
 ```bash

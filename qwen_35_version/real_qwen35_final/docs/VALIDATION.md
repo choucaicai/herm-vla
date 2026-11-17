@@ -39,3 +39,14 @@
 - 合并后 180 个 episode ID 无碰撞；第一个采样 epoch 的 easy/hard 决策数为 1671/1653。
 - Qwen processor + DataLoader worker 连续 8 个 B1/TBPTT2 批次覆盖两个数据集，每个样本 6 张图。
 - 正式训练配置为 `config/train_two_tasks.yaml`：从基座初始化，40k steps，warmup 2,500，每 5k 保存。
+
+## Easy + Hard 无固定首帧输入
+
+在 `zjc-hope-8-2` 的独立源码目录中完成 CPU 与真实数据验证：
+
+- 8 项接口回归测试通过，覆盖旧 6 图配置及新 4 图配置、冷启动历史截断、首帧退出缓存、两路当前图像 KV 选择及错误配置拒绝。
+- 新配置 `train_two_tasks_no_first.yaml` 使用 `absolute_indices=[]`、`delta_indices=[-15,0]`，真实数据覆盖两份数据共 180 条轨迹、165,118 帧。
+- 各视频分片首末轨迹在第 0 帧、第 50 帧和末帧解码通过，检查实际帧索引、4 图顺序、50×7 动作、尾部 mask 与归一化往返。
+- 真实 Qwen processor + DataLoader worker 连续 8 个 B1/TBPTT2 批次覆盖两个数据源，每个样本均为 4 图。
+- 原双数据集 6 图配置的数据验证也通过。
+- 此轮未加载 4B 模型进行 GPU 前反向，未启动无首帧版本的正式训练。
