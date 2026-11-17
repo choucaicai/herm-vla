@@ -39,5 +39,21 @@
     "images_per_sample": 4,
     "memory": "same 64Q slot Gate + image Top-4 KV",
     "training_steps": 40000
+  },
+  "hard_only_profile": {
+    "config": "config/train_hard.yaml",
+    "datasets": [
+      "Pick_block_hard"
+    ],
+    "absolute_indices": [
+      0
+    ],
+    "delta_indices": [
+      -15,
+      0
+    ],
+    "images_per_sample": 6,
+    "training_steps": 40000,
+    "normalization": "Hard-only q01/q99"
   }
 }

@@ -125,6 +125,21 @@ python -m qwen_35_version.real_qwen35_final.tests.validate_dataset \
   --output /tmp/piper_no_first_validation --workers
 ```
 
+## Hard 单数据集对照（保留固定首帧）
+
+`config/train_hard.yaml` 仅使用 `Pick_block_hard` 的 90 条轨迹、82,838 帧，保留原版
+`[0,t-15,t] × 2` 路相机的 6 图输入、64Q Gate、历史图像 KV Top-4 与 50×7 动作。
+蓝／红／黄三条原始语言指令各 30 条轨迹，目标文本不变。
+
+```bash
+export PIPER_DATA_ROOT=/path/to/repo-version/data
+bash qwen_35_version/real_qwen35_final/scripts/train_hard.sh
+```
+
+默认从 Qwen3.5-4B 基座重新训练 40,000 steps，8 GPU×B2、TBPTT2、ZeRO-1，
+warmup 2,500，每 5,000 步保存。归一化仅由 Hard 数据计算并保存到本次 run，
+推理使用同 run 的配置与统计。该对照用于比较单独训练 Hard 和 Easy+Hard 合训的表现。
+
 ## 推理
 
 ```bash

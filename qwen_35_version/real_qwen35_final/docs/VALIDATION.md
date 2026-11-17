@@ -50,3 +50,14 @@
 - 真实 Qwen processor + DataLoader worker 连续 8 个 B1/TBPTT2 批次覆盖两个数据源，每个样本均为 4 图。
 - 原双数据集 6 图配置的数据验证也通过。
 - 此轮未加载 4B 模型进行 GPU 前反向，未启动无首帧版本的正式训练。
+
+## Hard-only 40k 配置验证
+
+在 `zjc-hope-8-3` 验证 `config/train_hard.yaml`：
+
+- 仅一个数据源 `Pick_block_hard`，90 条轨迹、82,838 帧，三条原始颜色指令。
+- 保留首帧：`absolute_indices=[0]`、`delta_indices=[-15,0]`；每样本 6 图，动作 50×7。
+- 真实视频分片边界、episode 元数据、动作 mask 和仅由 Hard 计算的归一化往返通过。
+- 真实 Qwen processor + B1/TBPTT2 worker 读取到 Hard，输出每样本 6 图。
+- 本次使用的 17 个模型／训练 Python 文件与已完成的 Easy+Hard 40k run 源码快照完全一致。
+- 训练预算 40k、warmup 2,500、每 5k 保存，与双数据集 40k 配置一致。

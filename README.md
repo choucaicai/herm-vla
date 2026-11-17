@@ -143,6 +143,8 @@ Historical KV budget ablations: [Top-6 / Top-8](docs/TOPK_ABLATIONS.md), launche
 
 双数据集版本使用 `bash qwen_35_version/real_qwen35_final/scripts/train_two_tasks.sh`，联合训练 `Pick_block_easy` 和 `Pick_block_hard`（180 条轨迹、165,118 帧），均衡两个数据集的决策步数，共用连续动作归一化；默认从基座重新训练 40k steps。
 
+Hard 单数据集对照使用 `bash qwen_35_version/real_qwen35_final/scripts/train_hard.sh`：保留原版首帧与 64Q Gate／历史 KV，仅训练 `Pick_block_hard`，从基座重新训练 40k steps，使用 Hard 自身的归一化统计。
+
 无固定首帧对照使用 `bash qwen_35_version/real_qwen35_final/scripts/train_two_tasks_no_first.sh`：输入改为 `[t-15,t] × 2` 路相机共 4 图，保留 64Q Gate、历史 KV Top-4 和 40k 预算。推理通过 `PiperObservationBuffer.from_config(checkpoint_config)` 使用对应观测配置，详见真机包内说明。
 
 无记忆对照版本 [`real_qwen35_current_only`](qwen_35_version/real_qwen35_current_only/README.md) 只输入当前帧的两路相机图像，移除 memory query 和历史 KV，每次决策重置原生 S/卷积状态；使用相同 Easy + Hard 数据、归一化、40k 预算和每次更新的决策数量。入口为 `bash qwen_35_version/real_qwen35_current_only/scripts/train_real.sh`。
