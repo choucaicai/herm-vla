@@ -1,5 +1,5 @@
 {
-  "README.md": "724d2909f8241fd026dea797f271ac13c76bc29c1d5eb72bc80984223b6641a5",
+  "README.md": "bafe90ebfd54404fab89391601b802f4d8e26ec2d657d99c9703700fffc17e25",
   "__init__.py": "766aeed6a5e502f0742664a20ab060a3940f36eb2c25142c0e0d1bee3dd1fe07",
   "config/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "config/deepspeed_zero1.yaml": "3071cf154a906e2e7f4accaae16666975fa650f4902f35490f2f015504187ab1",
@@ -8,6 +8,7 @@
   "config/ds_zero2.json": "6b67f59dcc73ed96570b910590ce8448dad5d3c659d8111cf20834f8c13ee0ac",
   "config/train.yaml": "dd0ae0ab5461138ca656c7db6d952d71c6abe5ef1e73ede07cd171e388ca99a8",
   "config/train_hard.yaml": "a3e6f3ebabb171c8ead9315fd9dbee2c650af7e95a25bc470c3231663291b482",
+  "config/train_medium.yaml": "4fc180222412bec20fcd1d3fbf691b67dd2a357d6dde662fbe7df48db20752bc",
   "config/train_two_tasks.yaml": "b5658b384b3cfdf2f6b98206a029be0196068296f5bf87c56a895f89fff15b23",
   "config/train_two_tasks_no_first.yaml": "56b35a2a343a5cb30f4472608be6b88ff8ce89e3d87b5cbff16e81a6e83858f5",
   "data/__init__.py": "19aa3d9ae0f7e091cd3d55f4058868511fbbac77074afc22c9d78b0f8162fe56",
@@ -37,6 +38,7 @@
   "model/slot_memory.py": "29ba2b055ff33dacc2392840162d13058f43e408f3f200ec6f33a5625cd29725",
   "model/window_vision.py": "8b56ebc20d69147c435f9d564b1047e088381e275a25cb2537d5bfc3af5fe363",
   "scripts/train_hard.sh": "ec2a2fd63fe1a42bb4f2754db248dc06b992c0d52f9fd1b1614ba7fba8f3daaf",
+  "scripts/train_medium.sh": "65d277daa067309924ddc34729cb121f240f1e0704042601faea1463cd8a2ae6",
   "scripts/train_real.sh": "7911bccfc578f9a04b88c07dfa28a8810fb232f7ae139a0481efaccbeb592f7b",
   "scripts/train_two_tasks.sh": "2dc686a604bdb5b9082dc7e5a353527dca332c3c431c8aa93062d8fb0b2619f1",
   "scripts/train_two_tasks_no_first.sh": "6dc55a4e40c843372fa51f538ea4f6b4b80dfbfd6cc982c05d8b787ba53d862f",

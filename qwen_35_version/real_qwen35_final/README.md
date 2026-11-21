@@ -140,6 +140,20 @@ bash qwen_35_version/real_qwen35_final/scripts/train_hard.sh
 warmup 2,500，每 5,000 步保存。归一化仅由 Hard 数据计算并保存到本次 run，
 推理使用同 run 的配置与统计。该对照用于比较单独训练 Hard 和 Easy+Hard 合训的表现。
 
+## Medium 单数据集训练（保留固定首帧）
+
+将 `Pick_block_medium` 放到仓库的 `data/` 下，运行：
+
+```bash
+export PIPER_DATA_ROOT=/path/to/repo-version/data
+bash qwen_35_version/real_qwen35_final/scripts/train_medium.sh
+```
+
+`config/train_medium.yaml` 仅使用 Medium 的 90 条轨迹、93,274 帧，沿用 Hard-only 的
+`[0,t-15,t] × 2` 路相机、64Q Gate、单图 Top-4、50×7 动作和 8 GPU×B2、TBPTT2、ZeRO-1。
+默认从 Qwen3.5-4B 基座重新训练 40,000 steps，warmup 2,500，每 5,000 步保存，保留最近 4 个
+checkpoint。连续 q01/q99 归一化仅从 Medium 数据计算，推理使用本次 run 的配置与统计。
+
 ## 推理
 
 ```bash
